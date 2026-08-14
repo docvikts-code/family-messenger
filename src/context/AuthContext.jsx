@@ -9,6 +9,7 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [authError, setAuthError] = useState(null);
 
   const refreshProfile = useCallback(async (uid) => {
     const p = await getUserProfile(uid);
@@ -23,12 +24,11 @@ export function AuthProvider({ children }) {
         await refreshProfile(firebaseUser.uid);
         setLoading(false);
       } else {
-        // Анонімний вхід — простий спосіб отримати стабільний userId
-        // без потреби у паролях. Ім'я члена сім'ї вводиться окремо на онбордингу.
         try {
           await signInAnonymously(auth);
         } catch (err) {
           console.error("Помилка анонімного входу:", err);
+          setAuthError(`${err.code || "невідома помилка"}: ${err.message || ""}`);
           setLoading(false);
         }
       }
@@ -37,7 +37,7 @@ export function AuthProvider({ children }) {
   }, [refreshProfile]);
 
   return (
-    <AuthContext.Provider value={{ user, profile, loading, refreshProfile }}>
+    <AuthContext.Provider value={{ user, profile, loading, refreshProfile, authError }}>
       {children}
     </AuthContext.Provider>
   );
