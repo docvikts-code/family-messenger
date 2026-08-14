@@ -3,7 +3,7 @@ import { useAuth } from "../context/AuthContext";
 import { createFamily, joinFamily } from "../lib/family";
 
 export default function Onboarding({ onDone }) {
-  const { user, refreshProfile } = useAuth();
+  const { user, refreshProfile, authError } = useAuth();
   const [mode, setMode] = useState("choose"); // choose | create | join
   const [name, setName] = useState("");
   const [familyName, setFamilyName] = useState("");
@@ -79,6 +79,12 @@ export default function Onboarding({ onDone }) {
       <div className="roof-mark" />
       <h1>Родинний чат</h1>
       <p className="dim">Простір лише для вашої сім'ї — повідомлення, фото, відео.</p>
+
+      {authError && (
+        <p className="error">
+          Не вдалось увійти в застосунок. Технічна причина: {authError}
+        </p>
+      )}
 
       {mode === "choose" && (
         <div className="choice-stack">
