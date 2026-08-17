@@ -12,6 +12,20 @@
   </head>
   <body>
     <div id="root"></div>
+    <div id="crash-log" style="position:fixed;bottom:0;left:0;right:0;max-height:50vh;overflow:auto;background:#3a1010;color:#ffdddd;font-family:monospace;font-size:12px;padding:10px;white-space:pre-wrap;z-index:99999;display:none;"></div>
+    <script>
+      function showCrash(msg) {
+        var el = document.getElementById('crash-log');
+        el.style.display = 'block';
+        el.textContent += msg + '\n\n';
+      }
+      window.addEventListener('error', function (e) {
+        showCrash('JS ПОМИЛКА: ' + (e.message || e) + '\n' + (e.filename || '') + ':' + (e.lineno || ''));
+      });
+      window.addEventListener('unhandledrejection', function (e) {
+        showCrash('НЕОБРОБЛЕНА ПОМИЛКА: ' + (e.reason && (e.reason.stack || e.reason.message || e.reason)));
+      });
+    </script>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
