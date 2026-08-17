@@ -1,12 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { subscribeToMessages, sendTextMessage, sendMediaMessage } from "../lib/messages";
+import { getFamilyInfo } from "../lib/family";
 
-export default function ChatScreen({ chatId, chatName }) {
+export default function ChatScreen({ chatId, chatName, familyId }) {
   const { user } = useAuth();
   const [messages, setMessages] = useState([]);
   const [text, setText] = useState("");
   const [uploading, setUploading] = useState(false);
+  const [showInvite, setShowInvite] = useState(false);
+  const [inviteCode, setInviteCode] = useState(null);
   const bottomRef = useRef(null);
   const fileInputRef = useRef(null);
 
@@ -19,6 +22,14 @@ export default function ChatScreen({ chatId, chatName }) {
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages.length]);
+
+  async function handleShowInvite() {
+    if (!inviteCode && familyId) {
+      const info = await getFamilyInfo(familyId);
+      setInviteCode(info?.inviteCode || null);
+    }
+    setShowInvite((v) => !v);
+  }
 
   async function handleSend(e) {
     e.preventDefault();
@@ -51,7 +62,17 @@ export default function ChatScreen({ chatId, chatName }) {
     <div className="chat-screen">
       <header className="chat-header">
         <div className="roof-mark" />
-        <h2>{chatName}</h2>
+        <div className="chat-header-row">
+          <h2>{chatName}</h2>
+          <button className="invite-toggle" onClick={handleShowInvite} type="button">
+            👪 Код
+          </button>
+        </div>
+        {showInvite && (
+          <div className="invite-code-inline">
+            {inviteCode ? inviteCode : "Завантаження..."}
+          </div>
+        )}
       </header>
 
       <div className="message-list">
