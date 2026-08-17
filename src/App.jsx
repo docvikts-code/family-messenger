@@ -54,7 +54,7 @@ function Shell() {
 
   return (
     <div className="app-shell">
-      <ChatScreen chatId={chat.id} chatName={chat.name || "Родинний чат"} />
+      <ChatScreen chatId={chat.id} chatName={chat.name || "Родинний чат"} familyId={profile.familyId} />
     </div>
   );
 }
