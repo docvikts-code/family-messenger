@@ -5,8 +5,10 @@ import { VitePWA } from 'vite-plugin-pwa'
 // Базовий шлях для GitHub Pages: репозиторій публікується за адресою
 // https://<username>.github.io/<repo-name>/ — тому base має відповідати назві репозиторію.
 // Якщо деплоїте на Netlify/Vercel або власний домен, поставте base: '/'.
+const basePath = process.env.VITE_BASE_PATH || '/';
+
 export default defineConfig({
-  base: process.env.VITE_BASE_PATH || '/',
+  base: basePath,
   plugins: [
     react(),
     VitePWA({
@@ -19,7 +21,8 @@ export default defineConfig({
         theme_color: '#1b1f3b',
         background_color: '#1b1f3b',
         display: 'standalone',
-        start_url: '/',
+        start_url: basePath,
+        scope: basePath,
         icons: [
           {
             src: 'icons/icon-192.png',
