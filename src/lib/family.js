@@ -104,3 +104,8 @@ export async function getUserProfile(userId) {
   const snap = await getDoc(doc(db, "users", userId));
   return snap.exists() ? snap.data() : null;
 }
+
+export async function getFamilyInfo(familyId) {
+  const snap = await getDoc(doc(db, "families", familyId));
+  return snap.exists() ? snap.data() : null;
+}
